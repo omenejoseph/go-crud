@@ -14,9 +14,9 @@ func init() {
 func main() {
 	r := gin.Default()
 	r.POST("/posts", controllers.PostCreate)
-	r.GET("/", controllers.PostIndex)
-	r.GET("/:id", controllers.PostFind)
-	r.PATCH("/:id", controllers.PostUpdate)
-	r.DELETE("/:id", controllers.PostDelete)
+	r.GET("posts/", controllers.PostIndex)
+	r.GET("posts/:id", controllers.PostFind)
+	r.PATCH("posts/:id", controllers.PostUpdate)
+	r.DELETE("posts/:id", controllers.PostDelete)
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
