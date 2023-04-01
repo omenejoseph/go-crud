@@ -1,30 +1,35 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/omenejoseph/go-crud/inititalizers"
 	"github.com/omenejoseph/go-crud/models"
-	"gorm.io/gorm"
+	token_utils "github.com/omenejoseph/go-crud/utils"
 )
 
-var db *gorm.DB
-
-var Request struct {
+var PostRequest struct {
 	Body  string
 	Title string
 }
 
-func init() {
-	db = inititalizers.ConnectToDB()
-}
-
 func PostCreate(c *gin.Context) {
 
-	c.Bind(&Request)
+	c.Bind(&PostRequest)
 
-	post := models.Post{Title: Request.Title, Body: Request.Body}
+	user_id, err := token_utils.ExtractTokenID(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	user, _ := models.GetUserByID(user_id)
+
+	fmt.Println(user.Email) // user email
+
+	post := models.Post{Title: PostRequest.Title, Body: PostRequest.Body}
 
 	result := db.Create(&post)
 
@@ -78,9 +83,9 @@ func PostUpdate(c *gin.Context) {
 		return
 	}
 
-	c.Bind(&Request)
+	c.Bind(&PostRequest)
 
-	db.Model(&post).Updates(models.Post{Title: Request.Title, Body: Request.Body})
+	db.Model(&post).Updates(models.Post{Title: PostRequest.Title, Body: PostRequest.Body})
 
 	c.JSON(http.StatusAccepted, gin.H{
 		"data": post,

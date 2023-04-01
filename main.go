@@ -1,9 +1,8 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/omenejoseph/go-crud/controllers"
 	"github.com/omenejoseph/go-crud/inititalizers"
+	"github.com/omenejoseph/go-crud/routes"
 )
 
 func init() {
@@ -12,11 +11,5 @@ func init() {
 }
 
 func main() {
-	r := gin.Default()
-	r.POST("/posts", controllers.PostCreate)
-	r.GET("posts/", controllers.PostIndex)
-	r.GET("posts/:id", controllers.PostFind)
-	r.PATCH("posts/:id", controllers.PostUpdate)
-	r.DELETE("posts/:id", controllers.PostDelete)
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	routes.HandleRouting()
 }
